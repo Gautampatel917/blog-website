@@ -11,9 +11,14 @@ export default function Header() {
     const { theme } = useSelector((state) => state.theme); // Assuming you have a theme state
     const dispatch = useDispatch();
 
+    //profileImg
+
     const handleThemeToggle = () => {
         dispatch(toggleTheme());
     };
+
+    const profileImage = localStorage.getItem('profileImage') || currentUser?.profilePicture;
+    console.log(profileImage);
 
     return (
         <Navbar className="border-b-2">
@@ -37,14 +42,13 @@ export default function Header() {
                 <Button className="w-12 h-10 hidden sm:inline" color="grey" pill onClick={handleThemeToggle}>
                     {theme === 'light' ? <FaSun /> : <FaMoon />}
                 </Button>
-
                 {currentUser ? (
                     <Dropdown
                         arrowIcon={false}
                         inline
                         label={
-                            // <Avatar alt='user' img={currentUser.profilePicture} rounded />
-                            <Avatar rounded/>
+                            <Avatar alt='user' img={profileImage} rounded />
+                            // <Avatar rounded/>
                         }
                     >
                         <Dropdown.Header>
@@ -77,6 +81,6 @@ export default function Header() {
                     Projects
                 </Link>
             </Navbar.Collapse>
-        </Navbar>
+        </Navbar >
     );
 }

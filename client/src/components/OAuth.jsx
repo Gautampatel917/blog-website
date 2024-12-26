@@ -28,6 +28,7 @@ export default function OAuth() {
             })
             const data = await res.json();
             if (res.ok) {
+                localStorage.setItem('profileImage', photoURL);
                 dispatch(signInSuccess(data));
                 navigate('/');
             }
