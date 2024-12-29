@@ -1,20 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, TextInput } from "flowbite-react";
 
 export default function DashProfile() {
     const { currentUser } = useSelector((state) => state.user);
     const [profileImage, setProfileImage] = useState(null);
+    const filePickerRef = useRef();
 
+    /* const handleImageChange = (e) => {
+        const file = e.target.files[0]; // Get the selected file
+        if (file) {
+            const imageUrl = URL.createObjectURL(file); // Create a URL for the image
+            setProfileImage(imageUrl); // Update the profile image state
+            localStorage.setItem('profileImage', imageUrl); // Store the image URL in local storage
+        }
+    }; */
+
+    /* const handleSignout = async () => {
+        try {
+            const res = await fetch('/api/user/signout', {
+                method: 'POST',
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.message);
+            } else {
+                dispatch(signoutSuccess());
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+ */
     useEffect(() => {
-        // Retrieve the profile image from local storage
-        const storedImage = localStorage.getItem('profileImage');
-        if (storedImage) {
-            setProfileImage(storedImage);
-        } else if (currentUser && currentUser.profilePicture) {
+        // Set profileImage to currentUser .profilePicture
+        if (currentUser && currentUser.profilePicture) {
             setProfileImage(currentUser.profilePicture);
         }
     }, [currentUser]);
+
+
+
     return (
         <div className="max-w-lg mx-auto p-3 w-full">
             <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -38,5 +64,5 @@ export default function DashProfile() {
                 <span className="cursor-pointer">Sign Out</span>
             </div>
         </div>
-    )
+    );
 }
