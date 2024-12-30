@@ -23,9 +23,9 @@ export default function OAuth() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: displayName, // Use displayName
+                    name: displayName,
                     email,
-                    googlePhotoUrl: photoURL, // Use photoURL
+                    googlePhotoUrl: photoURL,
                 }),
             });
             const data = await res.json();

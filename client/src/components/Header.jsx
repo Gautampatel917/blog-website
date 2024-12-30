@@ -17,7 +17,8 @@ export default function Header() {
         dispatch(toggleTheme());
     };
 
-    const profileImage = currentUser ? currentUser.profilePicture : null;    console.log(profileImage);
+    const profileImage = currentUser ? currentUser.profilePicture : null;    
+    console.log(profileImage);
 
     return (
         <Navbar className="border-b-2">
