@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     currentUser: null,
+    isLoading: false,
     error: null,
-    loading: false,
 };
 
 const userSlice = createSlice({
@@ -11,25 +11,48 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         signInStart: (state) => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         },
         signInSuccess: (state, action) => {
+            state.isLoading = false;
             state.currentUser = action.payload;
-            state.loading = false; // This should stop the loading state
-            state.error = null;
         },
         signInFailure: (state, action) => {
-            state.loading = false; // This should also stop the loading state
+            state.isLoading = false;
             state.error = action.payload;
         },
-        signoutSuccess: (state) => {
+        signOutSuccess: (state) => {
             state.currentUser = null;
-            state.error = null;
-            state.loading = false;
         },
         updateProfilePicture: (state, action) => {
             state.currentUser.profilePicture = action.payload.profilePicture;
+        },
+        updateStart: (state) => {
+            state.isLoading = true;
+            state.error = null;
+        },
+        updateSuccess: (state, action) => {
+            state.currentUser = action.payload;
+            state.isLoading = false;
+            state.error = null;
+        },
+        updateFailure: (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        },
+        deleteUserStart: (state) => {
+            state.isLoading = true;
+            state.error = null;
+        },
+        deleteUserSuccess: (state) => {
+            state.currentUser = null;
+            state.isLoading = false;
+            state.error = null;
+        },
+        deleteUserFailure: (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
         },
     },
 });
@@ -38,7 +61,14 @@ export const {
     signInStart,
     signInSuccess,
     signInFailure,
+    signOutSuccess,
     updateProfilePicture,
+    updateStart,
+    updateSuccess,
+    updateFailure,
+    deleteUserStart,
+    deleteUserSuccess,
+    deleteUserFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

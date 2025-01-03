@@ -61,14 +61,16 @@ export const signIn = async (req, res, next) => {
             .status(200)
             .cookie('access_token', token, {
                 httpOnly: true,
+                secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+                sameSite: 'strict', // Prevent CSRF attacks
             })
             .json(rest);
 
-// Log the cookie to confirm it's being set
-console.log('Cookie set:', res.getHeaders()['set-cookie']);
+        // Log the cookie to confirm it's being set
+        console.log('Cookie set:', res.getHeaders()['set-cookie']);
     } catch (error) {
-    next(error);
-}
+        next(error);
+    }
 };
 
 export const google = async (req, res, next) => {

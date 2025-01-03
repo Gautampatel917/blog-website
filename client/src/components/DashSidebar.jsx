@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom"
 import { Sidebar } from 'flowbite-react';
+import { signOutSuccess } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
 import { HiArrowSmRight, HiUser } from 'react-icons/hi';
 
 export default function DashSidebar() {
     const [tab, setTab] = useState('');
     const location = useLocation();
+    const dispatch = useDispatch();
+    
 
     const handleSignout = async () => {
         try {
@@ -16,7 +20,7 @@ export default function DashSidebar() {
             if (!res.ok) {
                 console.log(data.message);
             } else {
-                dispatch(signoutSuccess());
+                dispatch(signOutSuccess());
             }
         } catch (error) {
             console.log(error.message);
