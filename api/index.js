@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.router.js';
 import authRouter from './routes/auth.router.js';
+import postRoutes from './routes/post.route.js';
 import { v2 as cloudinary } from 'cloudinary';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -29,13 +30,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173', 
-    credentials: true, 
+    origin: 'http://localhost:5173',
+    credentials: true,
 }));
 
 app.use('/', userRouter);
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/post', postRoutes); 
 app.use('/api', authRouter); // Mount the router at /api
 
 // Error middleware

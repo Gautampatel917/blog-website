@@ -1,10 +1,100 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { useNavigate } from 'react-router-dom';
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import React from 'react'
 
-export default function () {
-        return (
+export default function CreatePost() {
+    const [formData, setFormData] = useState({});
+    const [file, setFile] = useState(null);
+    const [imageUploadProgress, setImageUploadProgress] = useState(null);
+    const [imageUploadError, setImageUploadError] = useState(null);
+    const [imageFileUrl, setImageFileUrl] = useState(null);
+    const [imageFileUploadError, setImageFileUploadError] = useState(null);
+    const [publishError, setPublishError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size (2MB limit)
+            if (file.size > 2 * 1024 * 1024) {
+                setImageFileUploadError("File size must be less than 2MB");
+                return;
+            }
+
+            // Check file type (only images allowed)
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                setImageFileUploadError("Only JPEG, PNG, and GIF images are allowed");
+                return;
+            }
+
+            // If valid, set the file and its URL
+            setImageFileUploadError(null);
+            setFile(file);
+            setImageFileUrl(URL.createObjectURL(file));
+        }
+    };
+
+    const handleUploadImage = async () => {
+        try {
+            const uploadData = new FormData();
+            uploadData.append('file', file);
+
+            // Upload the image to Cloudinary
+            const uploadRes = await axios.post('/api/upload', uploadData);
+
+            if (uploadRes.status === 200) {
+                const imageUrl = uploadRes.data.url; // Extract the URL correctly
+                setFormData((prevData) => ({
+                    ...prevData,
+                    image: imageUrl,
+                }));
+                setImageFileUploadError(null);
+                console.log('Image uploaded successfully:', imageUrl); // Log the image URL
+            } else {
+                console.error('Failed to upload image:', uploadRes.data); // Log the error
+                setImageFileUploadError('Failed to upload image');
+            }
+        } catch (error) {
+            console.error('Upload Error:', error); // Log the error
+            setImageFileUploadError('Something went wrong. Please try again.');
+        }
+    };
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setPublishError(null);
+        setLoading(true);
+
+        try {
+            const res = await axios.post('/api/post/create', {
+                title: formData.title,
+                content: formData.content,
+                category: formData.category,
+                image: formData.image,
+            });
+            if (res.status === 201) {
+                setLoading(false);
+                setPublishError(null);
+                // Handle successful post creation, e.g., redirect or show success message
+            } else {
+                setLoading(false);
+                setPublishError('Failed to create post');
+            }
+        } catch (error) {
+            setLoading(false);
+            setPublishError('Something went wrong. Please try again.');
+        }
+    };
+
+    return (
         <div className='p-3 max-w-3xl mx-auto min-h-screen'>
             <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
             <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
