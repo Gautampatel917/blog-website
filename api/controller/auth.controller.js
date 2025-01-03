@@ -1,7 +1,6 @@
 import User from '../models/user.model.js';
 import bcryptjs from 'bcryptjs';
-const path = require('path');
-const errorHandler = require(path.join(__dirname, 'utils', 'error'));
+import { errorHandler } from '../utils/error.js';
 import jwt from 'jsonwebtoken';
 
 export const signUp = async (req, res, next) => {

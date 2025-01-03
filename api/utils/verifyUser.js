@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { errorHandler } from './error.js';
-import cookies from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 export const verifyToken = (req, res, next) => {
     const token = req.cookies['access_token'];
@@ -11,6 +11,7 @@ export const verifyToken = (req, res, next) => {
         if (err) {
             return next(errorHandler(401, 'Unauthorized: Invalid token'));
         }
+        console.log('Verified user:', user); // Log the user object
         req.user = user; // Attach user data to the request
         next();
     });
