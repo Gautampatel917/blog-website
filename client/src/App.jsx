@@ -12,7 +12,9 @@ import Header from './components/Header'; // Assuming you have a Header componen
 import Footer from './components/Footer'; // Ensure the path is correct
 import { Provider } from 'react-redux';
 import { store } from './redux/store.js';
+import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
+import CreatePost from './pages/CreatePost.jsx';
 
 const NotFound = () => {
   return <h1>404 - Page Not Found</h1>;
@@ -32,6 +34,9 @@ export default function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+          <Route element={<OnlyAdminPrivateRoute />}>
+            <Route path="/create-post" element={<CreatePost />} />
           </Route>
           <Route path="/projects" element={<Projects />} />
           <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}

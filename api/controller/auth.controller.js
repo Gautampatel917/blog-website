@@ -23,6 +23,7 @@ export const signUp = async (req, res, next) => {
         username,
         email,
         password: hashedPassword,
+        isAdmin: false,
     });
 
     try {
@@ -101,6 +102,7 @@ export const google = async (req, res, next) => {
                 email,
                 password: hashedPassword,
                 profilePicture: googlePhotoUrl,
+                isAdmin: false,
             });
 
             await newUser.save();

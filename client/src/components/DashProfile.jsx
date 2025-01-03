@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Alert, Button, Modal, ModalBody, TextInput } from "flowbite-react";
+import { Link } from "react-router-dom";
 import {
     updateStart,
     updateSuccess,
@@ -14,7 +15,7 @@ import {
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 export default function DashProfile() {
-    const { currentUser, error } = useSelector((state) => state.user);
+    const { currentUser, error, loading } = useSelector((state) => state.user);
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadError, setImageFileUploadError] = useState(null);
@@ -238,9 +239,29 @@ export default function DashProfile() {
                 />
 
                 {/* Update button */}
-                <Button type="submit" gradientDuoTone="cyanToBlue" outline>
-                    Update
+                <Button type="submit" gradientDuoTone="cyanToBlue" outline disabled={loading}>
+                    {
+                        loading ? (
+                            <>
+                                <Spinner size="sm" />
+                                <span className="pl-3">Loading...</span>
+                            </>
+                        ) : 'update'
+                    }
                 </Button>
+                {
+                    currentUser.isAdmin && (
+                        <Link to={'/create-post'}>
+                            <Button
+                                type="button"
+                                gradientDuoTone="redToYellow"
+                                className="w-full"
+                            >
+                                Create a post
+                            </Button>
+                        </Link>
+                    )
+                }
             </form>
 
             {/* Delete account and sign out links */}
