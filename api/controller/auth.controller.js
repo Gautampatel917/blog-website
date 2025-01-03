@@ -1,6 +1,7 @@
 import User from '../models/user.model.js';
 import bcryptjs from 'bcryptjs';
-import { errorHandler } from '../utils/error.js';
+const path = require('path');
+const errorHandler = require(path.join(__dirname, 'utils', 'error'));
 import jwt from 'jsonwebtoken';
 
 export const signUp = async (req, res, next) => {
@@ -37,13 +38,13 @@ export const signIn = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password || email === '' || password === '') {
-        next(errorHandler(400, 'All fields are required'));
+        return next(errorHandler(400, 'All fields are required'));
     }
 
     try {
         const validUser = await User.findOne({ email });
         if (!validUser) {
-            return next(errorHandler(404, 'User not found'));
+            return next(errorHandler(404, 'User   not found'));
         }
         const validPassword = bcryptjs.compareSync(password, validUser.password);
         if (!validPassword) {
@@ -56,21 +57,26 @@ export const signIn = async (req, res, next) => {
 
         const { password: pass, ...rest } = validUser._doc;
 
+        // Set the cookie
         res
             .status(200)
             .cookie('access_token', token, {
                 httpOnly: true,
-                sameSite: 'Lax',
-                secure: true,
             })
             .json(rest);
+
+// Log the cookie to confirm it's being set
+console.log('Cookie set:', res.getHeaders()['set-cookie']);
     } catch (error) {
-        next(error);
-    }
+    next(error);
+}
 };
 
 export const google = async (req, res, next) => {
     const { email, name, googlePhotoUrl } = req.body;
+
+    console.log('Google Authentication Request:', { email, name, googlePhotoUrl }); // Log the request
+
     try {
         const user = await User.findOne({ email });
         if (user) {
@@ -79,18 +85,13 @@ export const google = async (req, res, next) => {
                 process.env.JWT_SECRET
             );
             const { password, ...rest } = user._doc;
-            res
-                .status(200)
-                .cookie('access_token', token, {
-                    httpOnly: true,
-                })
-                .json(rest);
+            console.log('User  found:', rest); // Log the user data
+            res.status(200).json(rest);
         } else {
             const generatedPassword =
                 Math.random().toString(36).slice(-8) +
                 Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
-            console.log('The password is generated successfully');
 
             const newUser = new User({
                 username:
@@ -100,21 +101,42 @@ export const google = async (req, res, next) => {
                 password: hashedPassword,
                 profilePicture: googlePhotoUrl,
             });
+
             await newUser.save();
             const token = jwt.sign(
                 { id: newUser._id, isAdmin: newUser.isAdmin },
                 process.env.JWT_SECRET
             );
             const { password, ...rest } = newUser._doc;
-            res
-                .status(200)
-                .cookie('access_token', token, {
-                    httpOnly: true,
-                    sameSite: 'Lax',
-                    secure: true,
-                })
-                .json(rest);
+            console.log('New user created:', rest); // Log the new user data
+            res.status(200).json(rest);
         }
+    } catch (error) {
+        console.error('Google Authentication Error:', error); // Log the error
+        next(error);
+    }
+};
+
+export const updateProfilePicture = async (req, res, next) => {
+    const { userId, profilePicture } = req.body;
+
+    if (!userId || !profilePicture) {
+        return next(errorHandler(400, 'User  ID and profile picture URL are required'));
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePicture },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return next(errorHandler(404, 'User  not found'));
+        }
+
+        const { password, ...rest } = updatedUser._doc;
+        res.status(200).json(rest);
     } catch (error) {
         next(error);
     }

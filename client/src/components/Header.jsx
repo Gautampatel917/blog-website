@@ -4,20 +4,28 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
+import { useEffect, useState } from 'react';
+
 
 export default function Header() {
     const path = useLocation().pathname;  // track user for links
     const { currentUser } = useSelector((state) => state.user);
     const { theme } = useSelector((state) => state.theme); // Assuming you have a theme state
     const dispatch = useDispatch();
+    const [profileImage, setProfileImage] = useState(currentUser?.profilePicture || null);
+
 
     //profileImg
+    useEffect(() => {
+        if (currentUser?.profilePicture) {
+            setProfileImage(currentUser.profilePicture);
+        }
+    }, [currentUser?.profilePicture]);
 
     const handleThemeToggle = () => {
         dispatch(toggleTheme());
     };
 
-    const profileImage = currentUser ? currentUser.profilePicture : null;    
     console.log(profileImage);
 
     return (

@@ -28,6 +28,9 @@ const userSlice = createSlice({
             state.error = null;
             state.loading = false;
         },
+        updateProfilePicture: (state, action) => {
+            state.currentUser.profilePicture = action.payload.profilePicture;
+        },
     },
 });
 
@@ -35,6 +38,7 @@ export const {
     signInStart,
     signInSuccess,
     signInFailure,
+    updateProfilePicture,
 } = userSlice.actions;
 
 export default userSlice.reducer;
