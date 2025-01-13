@@ -3,13 +3,14 @@ import { Link, useLocation } from "react-router-dom"
 import { Sidebar } from 'flowbite-react';
 import { signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
-import { HiArrowSmRight, HiUser } from 'react-icons/hi';
+import { useSelector } from 'react-redux';
+import { HiArrowSmRight, HiUser, HiDocumentText } from 'react-icons/hi';
 
 export default function DashSidebar() {
     const [tab, setTab] = useState('');
     const location = useLocation();
     const dispatch = useDispatch();
-    
+    const { currentUser } = useSelector((state) => state.user);
 
     const handleSignout = async () => {
         try {
@@ -40,10 +41,22 @@ export default function DashSidebar() {
             <Sidebar.ItemGroup>
                 <Link to='/dashboard?tab=profile'>
                     <Sidebar.Item active={tab === "profile"} icon={HiUser}
-                        label={'User'} labelColor='dark' as='div'>
+                        label={currentUser.isAdmin ? 'Admin' : 'User'}
+                        labelColor='dark' as='div'>
                         Profile
                     </Sidebar.Item>
                 </Link>
+                {currentUser.isAdmin && (
+                    <Link to='/dashboard?tab=posts'>
+                        <Sidebar.Item
+                            active={tab === 'posts'}
+                            icon={HiDocumentText}
+                            as='div'
+                        >
+                            Posts
+                        </Sidebar.Item>
+                    </Link>
+                )}
                 <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer' onClick={handleSignout}>
                     Sign Out
                 </Sidebar.Item>

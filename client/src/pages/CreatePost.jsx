@@ -83,6 +83,7 @@ export default function CreatePost() {
             if (res.status === 201) {
                 setLoading(false);
                 setPublishError(null);
+                navigate(`/post/${res.data.slug}`);
                 // Handle successful post creation, e.g., redirect or show success message
             } else {
                 setLoading(false);
@@ -91,6 +92,7 @@ export default function CreatePost() {
         } catch (error) {
             setLoading(false);
             setPublishError('Something went wrong. Please try again.');
+            console.error('Error creating post:', error.response ? error.response.data : error.message);
         }
     };
 
