@@ -39,7 +39,7 @@ export const create = async (req, res, next) => {
     }
 }
 
-export const getpost = async (req, res, next) => {
+export const getPost = async (req, res, next) => {
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 10;
@@ -83,3 +83,19 @@ export const getpost = async (req, res, next) => {
         next(error);
     }
 }
+
+export const deletePost = async (req, res, next) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+        if (!post) {
+            return next(errorHandler(404, 'Post not found'));
+        }
+        if (!req.user.isAdmin && req.user.id !== post.userId.toString()) {
+            return next(errorHandler(403, 'You are not allowed to delete this post'));
+        }
+        await Post.findByIdAndDelete(req.params.postId);
+        res.status(200).json('The post has been deleted');
+    } catch (error) {
+        next(error);
+    }
+};
