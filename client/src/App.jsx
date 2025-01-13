@@ -15,6 +15,7 @@ import { store } from './redux/store.js';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import CreatePost from './pages/CreatePost.jsx';
+import UpdatePost from './pages/UpdatePost.jsx';
 
 const NotFound = () => {
   return <h1>404 - Page Not Found</h1>;
@@ -37,6 +38,7 @@ export default function App() {
           </Route>
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/update-post/:postId" element={<UpdatePost />} />
           </Route>
           <Route path="/projects" element={<Projects />} />
           <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}
