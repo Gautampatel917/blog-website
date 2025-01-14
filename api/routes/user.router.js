@@ -14,10 +14,10 @@ router.get('/', (req, res) => {
 router.get('/test', test);
 
 // Protected route: update user
+router.get('/getusers', verifyToken, getUsers)
 router.get('/:userId', verifyToken, getUser);
 router.put('/update/:userId', verifyToken, updateUser);
 router.delete('/delete/:userId', verifyToken, deleteUser);
 router.post('/signout', signout);
-router.get('/getusers', verifyToken, getUsers)
 
 export default router;

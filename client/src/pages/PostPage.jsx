@@ -18,7 +18,6 @@ export default function PostPage() {
                 setLoading(true);
                 const res = await fetch(`/api/post/getpost?slug=${postSlug}`);
                 const data = await res.json();
-                console.log('Received post data:', data);
                 if (!res.ok) {
                     setError(true);
                     setLoading(false);
