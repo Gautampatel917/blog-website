@@ -80,9 +80,10 @@ export const getPost = async (req, res, next) => {
             lastMonthPosts,
         });
     } catch (error) {
-        next(error);
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
-}
+};
 
 export const deletePost = async (req, res, next) => {
     try {

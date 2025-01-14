@@ -7,6 +7,7 @@ import postRoutes from './routes/post.route.js';
 import { v2 as cloudinary } from 'cloudinary';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import commentRoutes from './routes/comment.router.js';
 
 dotenv.config();
 
@@ -37,8 +38,9 @@ app.use(cors({
 app.use('/', userRouter);
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/post', postRoutes); 
-app.use('/api', authRouter); // Mount the router at /api
+app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
+// app.use('/api', authRouter); // Mount the router at /api
 
 // Error middleware
 app.use((err, req, res, next) => {
