@@ -70,9 +70,6 @@ export const signout = (req, res, next) => {
 };
 
 export const getUsers = async (req, res, next) => {
-    if (!req.user.isAdmin) {
-        return next(errorHandler(403, 'You are not allowed to see all users'));
-    }
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 9;
@@ -83,11 +80,6 @@ export const getUsers = async (req, res, next) => {
             .skip(startIndex)
             .limit(limit);
 
-        const usersWithoutPassword = users.map((user) => {
-            const { password, ...rest } = user._doc;
-            return rest;
-        });
-
         const totalUsers = await User.countDocuments();
 
         const now = new Date();
@@ -97,16 +89,31 @@ export const getUsers = async (req, res, next) => {
             now.getMonth() - 1,
             now.getDate()
         );
+
         const lastMonthUsers = await User.countDocuments({
             createdAt: { $gte: oneMonthAgo },
         });
 
         res.status(200).json({
-            users: usersWithoutPassword,
+            users,
             totalUsers,
             lastMonthUsers,
         });
     } catch (error) {
-        next(error);
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+export const getUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };

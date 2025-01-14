@@ -1,5 +1,5 @@
 import express from 'express';
-import { updateUser, test, deleteUser, signout, getUsers } from '../controller/user.controller.js';
+import { updateUser, test, deleteUser, signout, getUsers, getUser } from '../controller/user.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 
 const router = express.Router();
@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
 router.get('/test', test);
 
 // Protected route: update user
+router.get('/:userId', verifyToken, getUser);
 router.put('/update/:userId', verifyToken, updateUser);
 router.delete('/delete/:userId', verifyToken, deleteUser);
 router.post('/signout', signout);
