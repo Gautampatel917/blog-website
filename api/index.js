@@ -40,7 +40,7 @@ app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
-// app.use('/api', authRouter); // Mount the router at /api
+app.use('/api', authRouter); // Mount the router at /api
 
 // Error middleware
 app.use((err, req, res, next) => {
