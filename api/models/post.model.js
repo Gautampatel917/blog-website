@@ -23,6 +23,7 @@ const postSchema = new mongoose.Schema(
         category: {
             type: String,
             default: 'uncategorized',
+            enum: ['uncategorized', 'javascript', 'reactjs', 'nextjs', 'nodejs', 'python'],
         },
         slug: {
             type: String,

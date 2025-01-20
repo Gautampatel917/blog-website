@@ -74,7 +74,7 @@ export default function Search() {
         const urlParams = new URLSearchParams(location.search);
         urlParams.set('searchTerm', sidebarData.searchTerm);
         urlParams.set('sort', sidebarData.sort);
-        urlParams.set('category', sidebarData.category);
+        urlParams.set('category', sidebarData.category); // Add the category filter
         const searchQuery = urlParams.toString();
         navigate(`/search?${searchQuery}`);
     };
@@ -131,9 +131,11 @@ export default function Search() {
                             id='category'
                         >
                             <option value='uncategorized'>Uncategorized</option>
+                            <option value='javascript'>JavaScript</option>
                             <option value='reactjs'>React.js</option>
                             <option value='nextjs'>Next.js</option>
-                            <option value='javascript'>JavaScript</option>
+                            <option value='nodejs'>Node.js</option>
+                            <option value='python'>Python</option>
                         </Select>
                     </div>
                     <Button type='submit' outline gradientDuoTone='purpleToPink'>
