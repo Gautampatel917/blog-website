@@ -30,7 +30,7 @@ export const create = async (req, res, next) => {
         slug,
         userId: req.user.id,
         image: imageUrl, // Store the uploaded image URL
-        category: req.body.category || 'uncategorized',
+        category: req.req.body.category || 'uncategorized',
     });
     try {
         const savedPost = await newPost.save();
@@ -45,11 +45,9 @@ export const getPost = async (req, res, next) => {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 10;
         const sortDirection = req.query.order === 'asc' ? 1 : -1;
-        const category = req.query.category; // Get the category filter
-
         const posts = await Post.find({
             ...(req.query.userId && { userId: req.query.userId }),
-            ...(req.query.category && { category }),
+            ...(req.query.category && { category: req.query.category }),
             ...(req.query.slug && { slug: req.query.slug }),
             ...(req.query.postId && { _id: req.query.postId }),
             ...(req.query.searchTerm && {

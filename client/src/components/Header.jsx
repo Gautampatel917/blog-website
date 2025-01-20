@@ -58,27 +58,40 @@ export default function Header() {
                 </span>
                 Blogs
             </Link>
-            <form onSubmit={handleSubmit}>
-                <TextInput
-                    type='text'
-                    placeholder='Search...'
-                    rightIcon={AiOutlineSearch}
-                    className='hidden lg:inline'
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </form>
-            <Button className='w-12 h-10 lg:hidden' color='gray' pill>
-                <AiOutlineSearch />
-            </Button>
             <div className='flex gap-2 md:order-2'>
                 <Button
-                    className='w-12 h-10 hidden sm:inline'
+                    className='w-12 h-10 hidden sm:inline md:inline-block lg:inline-block'
                     color='gray'
                     pill
                     onClick={() => dispatch(toggleTheme())}
                 >
                     {theme === 'light' ? <FaSun /> : <FaMoon />}
+                </Button>
+                <Button
+                    className='w-12 h-10 sm:hidden md:hidden lg:hidden'
+                    color='gray'
+                    pill
+                    onClick={() => dispatch(toggleTheme())}
+                >
+                    {theme === 'light' ? <FaSun /> : <FaMoon />}
+                </Button>
+                <form onSubmit={handleSubmit} className='hidden md:inline-block lg:inline-block'>
+                    <TextInput
+                        type='text'
+                        placeholder='Search...'
+                        rightIcon={AiOutlineSearch}
+                        className='w-64'
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </form>
+                <Button
+                    className='w-12 h-10 md:hidden lg:hidden'
+                    color='gray'
+                    pill
+                    onClick={handleSubmit}
+                >
+                    <AiOutlineSearch />
                 </Button>
                 {currentUser ? (
                     <Dropdown
