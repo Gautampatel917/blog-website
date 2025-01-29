@@ -10,7 +10,6 @@ export default function Search() {
         category: 'uncategorized',
     });
 
-    console.log(sidebarData);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showMore, setShowMore] = useState(false);
@@ -22,7 +21,7 @@ export default function Search() {
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const searchTermFromUrl = urlParams.get('searchTerm');
-        const sortFromUrl = urlParams.get('sort');
+        const sortFromUrl = urlParams.get('sort') || 'desc';
         const categoryFromUrl = urlParams.get('category');
         if (searchTermFromUrl || sortFromUrl || categoryFromUrl) {
             setSidebarData({
@@ -74,7 +73,7 @@ export default function Search() {
         const urlParams = new URLSearchParams(location.search);
         urlParams.set('searchTerm', sidebarData.searchTerm);
         urlParams.set('sort', sidebarData.sort);
-        urlParams.set('category', sidebarData.category); // Add the category filter
+        urlParams.set('category', sidebarData.category);
         const searchQuery = urlParams.toString();
         navigate(`/search?${searchQuery}`);
     };

@@ -13,6 +13,7 @@ export default function CommentSection({ postId }) {
     const [showModal, setShowModal] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
     const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (comment.length > 200) {
@@ -23,6 +24,7 @@ export default function CommentSection({ postId }) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentUser.token}`, // Include the token in the headers
                 },
                 body: JSON.stringify({
                     content: comment,
@@ -35,6 +37,8 @@ export default function CommentSection({ postId }) {
                 setComment('');
                 setCommentError(null);
                 setComments([data, ...comments]);
+            } else {
+                setCommentError(data.message);
             }
         } catch (error) {
             setCommentError(error.message);
@@ -64,6 +68,9 @@ export default function CommentSection({ postId }) {
             }
             const res = await fetch(`/api/comment/likeComment/${commentId}`, {
                 method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${currentUser.token}`, // Include the token in the headers
+                },
             });
             if (res.ok) {
                 const data = await res.json();
@@ -101,6 +108,9 @@ export default function CommentSection({ postId }) {
             }
             const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${currentUser.token}`, // Include the token in the headers
+                },
             });
             if (res.ok) {
                 const data = await res.json();
@@ -110,6 +120,7 @@ export default function CommentSection({ postId }) {
             console.log(error.message);
         }
     };
+
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {currentUser ? (

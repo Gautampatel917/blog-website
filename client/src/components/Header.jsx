@@ -24,8 +24,6 @@ export default function Header() {
         }
     }, [location.search]);
 
-    console.log(searchTerm);
-
     const handleSignout = async () => {
         try {
             const res = await fetch('/api/user/signout', {
@@ -35,7 +33,7 @@ export default function Header() {
             if (!res.ok) {
                 console.log(data.message);
             } else {
-                dispatch(signoutSuccess());
+                dispatch(signOutSuccess());
             }
         } catch (error) {
             console.log(error.message);

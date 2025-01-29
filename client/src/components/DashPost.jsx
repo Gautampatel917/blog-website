@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { set } from 'mongoose';
 
 export default function DashPosts() {
     const { currentUser } = useSelector((state) => state.user);
@@ -16,16 +15,20 @@ export default function DashPosts() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await fetch(`/api/post/getpost?userId=${currentUser._id}`);
+                const res = await fetch(`/api/post/getpost?userId=${currentUser._id}&limit=5`);
+                console.log(currentUser._id);
                 const data = await res.json();
+                console.log('Fetched posts:', data); // Log the fetched data
                 if (res.ok) {
                     setUserPosts(data.posts);
-                    if (data.posts.length < 9) {
+                    if (data.posts.length < 5) {
                         setShowMore(false);
                     }
+                } else {
+                    console.error('Error fetching posts:', data.message); // Log the error message
                 }
             } catch (error) {
-                console.log(error.message);
+                console.error('Fetch error:', error.message); // Log the fetch error
             }
         };
         if (currentUser.isAdmin) {
@@ -37,7 +40,7 @@ export default function DashPosts() {
         const startIndex = userPosts.length;
         try {
             const res = await fetch(
-                `http://localhost:3000/api/post/getpost?userId=${currentUser._id}&startIndex=${startIndex}`
+                `/api/post/getpost?userId=${currentUser._id}&startIndex=${startIndex}&limit=5`
             );
             if (res.status !== 200) {
                 console.error('API error:', res.statusText);
@@ -45,7 +48,7 @@ export default function DashPosts() {
             }
             const data = await res.json();
             setUserPosts((prev) => [...prev, ...data.posts]);
-            if (data.posts.length < 9) {
+            if (data.posts.length < 5) {
                 setShowMore(false);
             }
         } catch (error) {

@@ -87,8 +87,20 @@ export const google = async (req, res, next) => {
                 process.env.JWT_SECRET
             );
             const { password, ...rest } = user._doc;
-            console.log('User  found:', rest); // Log the user data
-            res.status(200).json(rest);
+            console.log('User found:', rest); // Log the user data
+
+            // Set the cookie
+            res
+                .status(200)
+                .cookie('access_token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+                    sameSite: 'strict', // Prevent CSRF attacks
+                })
+                .json(rest);
+
+            // Log the cookie to confirm it's being set
+            console.log('Cookie set:', res.getHeaders()['set-cookie']);
         } else {
             const generatedPassword =
                 Math.random().toString(36).slice(-8) +
@@ -112,7 +124,19 @@ export const google = async (req, res, next) => {
             );
             const { password, ...rest } = newUser._doc;
             console.log('New user created:', rest); // Log the new user data
-            res.status(200).json(rest);
+
+            // Set the cookie
+            res
+                .status(200)
+                .cookie('access_token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+                    sameSite: 'strict', // Prevent CSRF attacks
+                })
+                .json(rest);
+
+            // Log the cookie to confirm it's being set
+            console.log('Cookie set:', res.getHeaders()['set-cookie']);
         }
     } catch (error) {
         console.error('Google Authentication Error:', error); // Log the error

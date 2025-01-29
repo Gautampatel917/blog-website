@@ -13,7 +13,7 @@ export const create = async (req, res, next) => {
         return res.status(400).json({
             status: 'failed',
             statusCode: 400,
-            message: 'Please provide all require fields',
+            message: 'Please provide all required fields',
         });
     }
     const slug = req.body.title
@@ -30,7 +30,7 @@ export const create = async (req, res, next) => {
         slug,
         userId: req.user.id,
         image: imageUrl, // Store the uploaded image URL
-        category: req.req.body.category || 'uncategorized',
+        category: req.body.category || 'uncategorized',
     });
     try {
         const savedPost = await newPost.save();
@@ -45,8 +45,10 @@ export const getPost = async (req, res, next) => {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 10;
         const sortDirection = req.query.order === 'asc' ? 1 : -1;
-        const posts = await Post.find({
-            ...(req.query.userId && { userId: req.query.userId }),
+        const userId = req.query.userId;
+
+        const query = {
+            ...(userId && { userId }),
             ...(req.query.category && { category: req.query.category }),
             ...(req.query.slug && { slug: req.query.slug }),
             ...(req.query.postId && { _id: req.query.postId }),
@@ -56,15 +58,18 @@ export const getPost = async (req, res, next) => {
                     { content: { $regex: req.query.searchTerm, $options: 'i' } },
                 ],
             }),
-        })
+        };
+
+        console.log('Query parameters:', query); // Log the query parameters
+
+        const posts = await Post.find(query)
             .sort({ updatedAt: sortDirection })
             .skip(startIndex)
             .limit(limit);
 
-        const totalPosts = await Post.countDocuments();
+        const totalPosts = await Post.countDocuments(query);
 
         const now = new Date();
-
         const oneMonthAgo = new Date(
             now.getFullYear(),
             now.getMonth() - 1,
@@ -81,8 +86,64 @@ export const getPost = async (req, res, next) => {
             lastMonthPosts,
         });
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching posts:', error); // Log the error
         res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+export const getPostByUserId = async (req, res, next) => {
+    try {
+        const userId = req.query.userId; // Use query parameter instead of path parameter
+        const posts = await Post.find({ userId });
+
+        if (!posts || posts.length === 0) {
+            return res.status(404).json({ message: 'No posts found for this user' });
+        }
+
+        res.status(200).json({ posts });
+    } catch (error) {
+        console.error('Error fetching posts by userId:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+export const updatePost = async (req, res, next) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+        if (!post) {
+            return next(errorHandler(404, 'Post not found'));
+        }
+        if (!req.user.isAdmin && req.user.id !== post.userId.toString()) {
+            return next(errorHandler(403, 'You are not allowed to update this post'));
+        }
+
+        if (!req.body.title || !req.body.content) {
+            return res.status(400).json({
+                status: 'failed',
+                statusCode: 400,
+                message: 'Please provide all required fields',
+            });
+        }
+
+        const slug = req.body.title
+            .split(' ')
+            .join('-')
+            .toLowerCase()
+            .replace(/[^a-zA-Z0-9-]/g, '');
+
+        // Get the uploaded image URL from the request body
+        const imageUrl = req.body.image;
+
+        post.title = req.body.title;
+        post.content = req.body.content;
+        post.slug = slug;
+        post.image = imageUrl; // Update the image URL
+        post.category = req.body.category || 'uncategorized';
+
+        const updatedPost = await post.save();
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        next(error);
     }
 };
 
