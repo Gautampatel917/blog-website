@@ -15,7 +15,6 @@ export default function Search() {
     const [showMore, setShowMore] = useState(false);
 
     const location = useLocation();
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,15 +39,13 @@ export default function Search() {
                 setLoading(false);
                 return;
             }
-            if (res.ok) {
-                const data = await res.json();
-                setPosts(data.posts);
-                setLoading(false);
-                if (data.posts.length === 9) {
-                    setShowMore(true);
-                } else {
-                    setShowMore(false);
-                }
+            const data = await res.json();
+            setPosts(data.posts);
+            setLoading(false);
+            if (data.posts.length === 9) {
+                setShowMore(true);
+            } else {
+                setShowMore(false);
             }
         };
         fetchPosts();
@@ -84,18 +81,16 @@ export default function Search() {
         const urlParams = new URLSearchParams(location.search);
         urlParams.set('startIndex', startIndex);
         const searchQuery = urlParams.toString();
-        const res = await fetch(`/api/post/getposts?${searchQuery}`);
+        const res = await fetch(`/api/post/getpost?${searchQuery}`);
         if (!res.ok) {
             return;
         }
-        if (res.ok) {
-            const data = await res.json();
-            setPosts([...posts, ...data.posts]);
-            if (data.posts.length === 9) {
-                setShowMore(true);
-            } else {
-                setShowMore(false);
-            }
+        const data = await res.json();
+        setPosts([...posts, ...data.posts]);
+        if (data.posts.length === 9) {
+            setShowMore(true);
+        } else {
+            setShowMore(false);
         }
     };
 
@@ -103,7 +98,7 @@ export default function Search() {
         <div className='flex flex-col md:flex-row'>
             <div className='p-7 border-b md:border-r md:min-h-screen border-gray-500'>
                 <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
-                    <div className='flex   items-center gap-2'>
+                    <div className='flex items-center gap-2'>
                         <label className='whitespace-nowrap font-semibold'>
                             Search Term:
                         </label>

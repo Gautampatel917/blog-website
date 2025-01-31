@@ -105,7 +105,7 @@ export const getPostByUserId = async (req, res, next) => {
         console.error('Error fetching posts by userId:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-};
+}; 
 
 export const updatePost = async (req, res, next) => {
     try {
