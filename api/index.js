@@ -8,6 +8,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import commentRoutes from './routes/comment.router.js';
+import path from 'path';
 
 dotenv.config();
 
@@ -27,6 +28,8 @@ mongoose
         console.error('Mongoose connection error: ', err);
     });
 
+const __dirname = path.resolve();
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -41,6 +44,11 @@ app.use('/api/auth', authRouter);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api', authRouter); // Mount the router at /api
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.use("*", (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 // Error middleware
 app.use((err, req, res, next) => {
