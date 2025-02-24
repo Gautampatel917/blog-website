@@ -45,10 +45,7 @@ app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api', authRouter); // Mount the router at /api
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
-app.use("*", (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
+const _dirname = path.resolve();
 
 // Error middleware
 app.use((err, req, res, next) => {
@@ -59,6 +56,11 @@ app.use((err, req, res, next) => {
         statusCode,
         message: message,
     });
+});
+
+app.use(express.static(path.join(_dirname, '/client/dist')));
+app.use("*", (req, res) => {
+    res.sendFile(path.join(_dirname, 'client', 'dist', 'index.html'));
 });
 
 app.listen(3000, '127.0.0.1', () => {
