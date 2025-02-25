@@ -44,7 +44,7 @@ export const getPost = async (req, res, next) => {
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 10;
-        const sortDirection = req.query.order === 'asc' ? 1 : -1;
+        const sortDirection = req.query.sort === 'asc' ? 1 : -1; // Fix: Use `req.query.sort`
         const userId = req.query.userId;
 
         const query = {
@@ -59,11 +59,9 @@ export const getPost = async (req, res, next) => {
                 ],
             }),
         };
-
-        console.log('Query parameters:', query); // Log the query parameters
-
+        
         const posts = await Post.find(query)
-            .sort({ updatedAt: sortDirection })
+            .sort({ createdAt: sortDirection }) 
             .skip(startIndex)
             .limit(limit);
 
@@ -86,14 +84,14 @@ export const getPost = async (req, res, next) => {
             lastMonthPosts,
         });
     } catch (error) {
-        console.error('Error fetching posts:', error); // Log the error
+        console.error('Error fetching posts:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 
 export const getPostByUserId = async (req, res, next) => {
     try {
-        const userId = req.query.userId; // Use query parameter instead of path parameter
+        const userId = req.query.userId; 
         const posts = await Post.find({ userId });
 
         if (!posts || posts.length === 0) {
@@ -105,7 +103,7 @@ export const getPostByUserId = async (req, res, next) => {
         console.error('Error fetching posts by userId:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-}; 
+};
 
 export const updatePost = async (req, res, next) => {
     try {

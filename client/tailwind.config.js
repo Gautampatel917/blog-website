@@ -7,8 +7,16 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     flowbite.content(),
   ],
+  darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          light: '#3498db',
+          dark: '#2c3e50',
+        },
+      },
+    },
   },
   plugins: [
     require('flowbite/plugin'),
