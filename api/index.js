@@ -39,7 +39,7 @@ app.use(cookieParser());
     credentials: true,
 })); */
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://blog-website-9l1o.onrender.com'],
+    origin: ['http://localhost:5173', 'https://blog-website-5cm7.onrender.com'],
     credentials: true,
 }))
 
