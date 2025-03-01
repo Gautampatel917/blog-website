@@ -10,7 +10,7 @@ export default function FooterCom() {
                     <div className="mt-5">
                         <Link to="/" className="self-center whitespace-nowrap text-lg sm:text-xl font-semibold dark:text-white">
                             <span className="px-2 py-1 bg-gradient-to-r from-slate-800 via-slate-500 to-slate-400 rounded-lg text-white">
-                                Gautam's
+                                MERN
                             </span>
                             Blogs
                         </Link>
@@ -31,7 +31,7 @@ export default function FooterCom() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    Gautam's Blog
+                                    MERN Blog
                                 </Footer.Link>
                             </Footer.LinkGroup>
                         </div>
@@ -65,7 +65,7 @@ export default function FooterCom() {
                 </div>
                 <Footer.Divider />
                 <div className="w-full sm:flex sm:items-center sm:justify-between">
-                    <Footer.Copyright href="#" by="Gautam's Blogs" year={2024} />
+                    <Footer.Copyright href="#" by="MERN Blogs" year={2024} />
                     <div className="flex gap-6 sm:mt-0 mt-8 sm:justify-center">
                         <Footer.Icon
                             href="#"

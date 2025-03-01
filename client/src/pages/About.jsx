@@ -12,7 +12,7 @@ export default function About() {
                 <div className="mt-6">
                     <h2 className="text-2xl font-semibold">About Me</h2>
                     <p className="text-gray-600 dark:text-gray-300 mt-2">
-                        I am Gautam, a BCA Semester 6 student, and this blog website is my final year project.
+                        We are, a BCA Semester 6 student, and this blog website is my final year project.
                     </p>
                 </div>
             </div>
