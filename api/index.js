@@ -10,6 +10,7 @@ import cors from 'cors';
 import commentRoutes from './routes/comment.router.js';
 import path from 'path';
 
+const port = process.env.PORT || 3000;
 dotenv.config();
 
 // Initialize Cloudinary
@@ -63,6 +64,6 @@ app.use("*", (req, res) => {
     res.sendFile(path.join(_dirname, 'client', 'dist', 'index.html'));
 });
 
-app.listen(3000, '127.0.0.1', () => {
-    console.log('App running in http://127.0.0.1:3000');
+app.listen(port, () => {
+    console.log(`App running on port ${port}`);
 });
