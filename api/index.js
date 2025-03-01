@@ -34,10 +34,14 @@ const __dirname = path.resolve();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
+/* app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
-}));
+})); */
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://blog-website-9l1o.onrender.com'],
+    credentials: true,
+}))
 
 app.use('/', userRouter);
 app.use('/api/user', userRouter);

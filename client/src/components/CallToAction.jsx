@@ -17,7 +17,7 @@ export default function CallToAction() {
                 </Button>
             </div>
             <div className="p-4 flex-1">
-                <img src=".././clg2.jpeg" />
+                <img src="https://res.cloudinary.com/dagvoqal0/image/upload/v1740828426/clg2_khz6xv.jpg" />
             </div>
         </div>
     )
